@@ -21,6 +21,8 @@
     "import/no-unresolved": "off",
     "import/extensions": "off",
     "comma-dangle": "off",
-    "object-curly-newline": "off"
+    "object-curly-newline": "off",
+    "no-useless-constructor": "off",
+    "no-empty-function": "off"
   }
 }

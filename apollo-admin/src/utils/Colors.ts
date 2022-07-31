@@ -12,6 +12,8 @@ class Colors {
   public static text = '#999999'
 
   public static link = '#b783f7'
+
+  private constructor() {}
 }
 
 export default Colors

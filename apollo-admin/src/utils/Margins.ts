@@ -12,6 +12,8 @@ class Margins {
     normal: 8,
     long: 36,
   }
+
+  private constructor() {}
 }
 
 export default Margins

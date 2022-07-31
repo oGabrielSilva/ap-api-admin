@@ -1,23 +1,25 @@
 import React, { createContext, ReactNode, useMemo, useState } from 'react'
+import Constants from '../utils/Constants'
 
 type TAPCProps = { children: ReactNode }
 type TSession = { uid: string }
 
 interface IApolloContext {
-  session?: TSession
-  handleSignIn: (email: string, password: string) => void //eslint-disable-line
+  sessionUid: string
+  handleStorageSignIn: (session: TSession) => void //eslint-disable-line
 }
 
 export const ApolloContext = createContext<IApolloContext>({} as IApolloContext)
 
 function ApolloContextProvider({ children }: TAPCProps) {
-  const [session, setSession] = useState<TSession>()
+  const [sessionUid, setSession] = useState<string>('')
 
-  const handleSignIn = (email: string, password: string) => {
-    console.log(email, password)
+  const handleStorageSignIn = (session: TSession) => {
+    setSession(session.uid as string)
+    localStorage.setItem(Constants.sessionKey, session.uid)
   }
 
-  const context = useMemo(() => ({ session, handleSignIn }), [])
+  const context = useMemo(() => ({ sessionUid, handleStorageSignIn }), [])
 
   return (
     <ApolloContext.Provider value={context}>{children}</ApolloContext.Provider>

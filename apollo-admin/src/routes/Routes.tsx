@@ -1,9 +1,9 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
-import ApolloContextProvider from './context/Apollo'
-import Home from './pages/Home'
+import ApolloContextProvider from '../context/Apollo'
+import Home from '../pages/Home'
 
-function App() {
+function Router() {
   return (
     <div className="App">
       <ApolloContextProvider>
@@ -15,4 +15,4 @@ function App() {
   )
 }
 
-export default App
+export default Router

@@ -2,14 +2,17 @@ import React, {
   CSSProperties,
   useCallback,
   useContext,
+  useEffect,
   useRef,
   useState,
 } from 'react'
 import { Link } from 'react-router-dom'
+import Account from '../api/Account'
 import { ApolloContext } from '../context/Apollo'
 import Colors from '../utils/Colors'
 import Device from '../utils/Device'
 import Margins from '../utils/Margins'
+import Validation from '../utils/Validation'
 
 interface IStyle {
   input: CSSProperties
@@ -53,42 +56,34 @@ const styles: IStyle = {
 }
 
 function SignIn() {
-  const { handleSignIn } = useContext(ApolloContext)
+  const { handleStorageSignIn } = useContext(ApolloContext)
   const [remember, setRemember] = useState(false)
   const [email, setEmail] = useState<string>()
   const [password, setPassword] = useState<string>()
-
-  const [emailIsOk, setEmailIsOk] = useState(false)
-  const [passwordIsOk, setPasswordIsOk] = useState(false)
+  const [buttonDisabled, setButtonDisabled] = useState(true)
 
   const emailRef = useRef<HTMLInputElement>(null)
   const passwordRef = useRef<HTMLInputElement>(null)
 
-  const handleValidSignIn = useCallback(() => {
-    if (email) {
-      const errors: Array<boolean> = []
-      const arr: Array<string> = email.split('')
-      const obj = { at: arr.includes('@'), dot: arr.includes('.') }
-      const afterAt = email.split('@')[1]
-      const beforeAt = email.split('@')[0]
+  useEffect(() => {
+    if (email && password) {
+      setButtonDisabled(
+        !(Validation.email(email) && Validation.password(password))
+      )
+    }
+  }, [email, password])
 
-      if (!afterAt || (afterAt !== undefined && afterAt.length < 4)) {
-        errors.push(true)
-      }
-      if (!beforeAt || (beforeAt !== undefined && beforeAt.length < 2)) {
-        errors.push(true)
-      }
-      if (!obj.at) errors.push(true)
-
-      if (!obj.dot) errors.push(true)
-
-      if (email.split(' ').length > 1) errors.push(true)
-
-      if (errors.length <= 0) setEmailIsOk(true)
-    } else setEmailIsOk(false)
-    if (password && password.length >= 8) {
-      setPasswordIsOk(true)
-    } else setPasswordIsOk(false)
+  const handleSignIn = useCallback(() => {
+    if (!email || !password) return
+    Account.signIn({ email, password })
+      .then((response) => {
+        if (response.data && response.data.session) {
+          handleStorageSignIn(response.data.session)
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   }, [email, password])
 
   return (
@@ -140,9 +135,10 @@ function SignIn() {
         </Link>
       </div>
       <button
+        disabled={buttonDisabled}
         type="button"
         style={styles.submitBtn}
-        onClick={handleValidSignIn}
+        onClick={() => handleSignIn()}
       >
         <span style={{ fontWeight: 700, color: Colors.dark }}>Entrar</span>
       </button>
