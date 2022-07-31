@@ -1,5 +1,6 @@
 import dotenv from 'dotenv'
 import e from 'express'
+import cors from 'cors'
 import mongoose from 'mongoose'
 import router from './router/router'
 
@@ -14,6 +15,7 @@ mongoose
 
 app.use(e.urlencoded({ extended: true }))
 app.use(e.json())
+app.use(cors())
 
 app.use(router)
 
