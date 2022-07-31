@@ -29,6 +29,8 @@ async function signIn(req: Request, res: Response) {
       exception(res, 400, 'password entered is incorrect')
       return
     }
+    userByEmail.lastLogin = new Date()
+    await userByEmail.save()
     const session = await sessionCreate(userByEmail._id)
     res.status(200).json({
       session: { uid: session.uid },

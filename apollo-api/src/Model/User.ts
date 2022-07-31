@@ -9,6 +9,7 @@ const userSchema = new Schema<TUser>(
     email: { type: String, required: true, unique: true },
     avatar: { type: String, default: '' },
     lastLogin: { type: Date, default: Date.now },
+    active: { type: Boolean, default: false },
   },
   { timestamps: true }
 )

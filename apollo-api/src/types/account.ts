@@ -10,6 +10,7 @@ export interface TUser extends TUserSignIn {
   lastname: string
   avatar?: string
   lastLogin: Date
+  active: boolean
 }
 
 export type TSession = {
