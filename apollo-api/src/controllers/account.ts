@@ -30,7 +30,10 @@ async function signIn(req: Request, res: Response) {
       return
     }
     const session = await sessionCreate(userByEmail._id)
-    res.status(200).json({ session: { uid: session.uid } })
+    res.status(200).json({
+      session: { uid: session.uid },
+      user: { name: userByEmail.name, email: userByEmail.email },
+    })
   } catch (error) {
     if (config.devMode && error instanceof Error) {
       exception(res, 404, error.message)
@@ -64,7 +67,9 @@ async function signUp(req: Request, res: Response) {
     }
     const user = await User.create({ name, lastname, email, password })
     const session = await sessionCreate(user._id)
-    res.status(200).json({ session: { uid: session.uid } })
+    res
+      .status(200)
+      .json({ session: { uid: session.uid }, user: { name: user.name, email: user.email } })
   } catch (error) {
     if (config.devMode && error instanceof Error) {
       exception(res, 404, error.message)
