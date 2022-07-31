@@ -1,7 +1,9 @@
-import 'dotenv/config'
+import dotenv from 'dotenv'
 import e from 'express'
 import mongoose from 'mongoose'
 import router from './router/router'
+
+dotenv.config()
 
 const app = e()
 
