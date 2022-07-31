@@ -54,7 +54,7 @@ const styles: IStyle = {
   },
 }
 
-function SignIn() {
+function SignInForm() {
   const { isMobile, handleStorageSignIn, handleAlert } =
     useContext(ApolloContext)
   const [remember, setRemember] = useState(false)
@@ -70,11 +70,14 @@ function SignIn() {
       setButtonDisabled(
         !(Validation.email(email) && Validation.password(password))
       )
-    }
+    } else setButtonDisabled(true)
   }, [email, password])
 
   const handleSignIn = useCallback(() => {
-    if (!email || !password) return
+    if (!email || !password) {
+      handleAlert('Oopss...', 'Check all fields')
+      return
+    }
     Account.signIn({ email, password })
       .then((response) => {
         if (response.data && response.data.session) {
@@ -158,7 +161,7 @@ function SignIn() {
           marginTop: Margins.margin,
         }}
       >
-        <p>Não possui uma conta?</p>
+        <p>don&apos;t have an account?</p>
         <Link
           to="/signup"
           style={{
@@ -167,11 +170,11 @@ function SignIn() {
             marginLeft: Margins.margin / 4,
           }}
         >
-          Cadastre-se
+          Sign up
         </Link>
       </div>
     </div>
   )
 }
 
-export default SignIn
+export default SignInForm

@@ -1,6 +1,6 @@
 import React, { CSSProperties, useContext } from 'react'
 import Footer from '../components/Footer'
-import SignIn from '../components/SignIn'
+import SignInForm from '../components/SignInForm'
 import { ApolloContext } from '../context/Apollo'
 import Colors from '../utils/Colors'
 import Device from '../utils/Device'
@@ -32,7 +32,6 @@ const styles: IStyle = {
 
 function Home() {
   const { isMobile } = useContext(ApolloContext)
-  console.log((isMobile && '90vw') || '50vw')
 
   return (
     <div>
@@ -45,7 +44,7 @@ function Home() {
           <h3 style={{ margin: Margins.margin, textAlign: 'center' }}>
             Sign in to your account
           </h3>
-          <SignIn />
+          <SignInForm />
         </main>
       </div>
       <Footer />

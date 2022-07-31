@@ -27,6 +27,7 @@ interface IApolloContext {
   setAlertMessage: (value: string) => void //eslint-disable-line
   handleAlert: (title: string, message: string) => void //eslint-disable-line
   handleStorageSignIn: (session: TSession, remember: boolean) => void //eslint-disable-line
+  handleStorageSignUp: (session: TSession) => void //eslint-disable-line
 }
 
 export const ApolloContext = createContext<IApolloContext>({} as IApolloContext)
@@ -65,6 +66,13 @@ function ApolloContextProvider({ children }: TAPCProps) {
     []
   )
 
+  const handleStorageSignUp = useCallback((session: TSession) => {
+    setSession(session.session.uid as string)
+    setUserInfo({ name: session.user.name, email: session.user.email })
+    localStorage.setItem(Constants.sessionKey, session.session.uid)
+    localStorage.setItem(Constants.userSessionKey, JSON.stringify(session.user))
+  }, [])
+
   const handleResizeScreen = useCallback(() => {
     setIsMobile(Device.isMobile())
   }, [])
@@ -80,6 +88,7 @@ function ApolloContextProvider({ children }: TAPCProps) {
       setAlertMessage,
       handleAlert,
       handleStorageSignIn,
+      handleStorageSignUp,
     }),
     [
       sessionUid,
@@ -91,6 +100,7 @@ function ApolloContextProvider({ children }: TAPCProps) {
       setAlertTitle,
       handleAlert,
       setAlertMessage,
+      handleStorageSignUp,
     ]
   )
 
