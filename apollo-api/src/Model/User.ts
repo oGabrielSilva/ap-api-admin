@@ -8,6 +8,7 @@ const userSchema = new Schema<TUser>(
     password: { type: String, required: true, select: false },
     email: { type: String, required: true, unique: true },
     avatar: { type: String, default: '' },
+    lastLogin: { type: Date, default: Date.now },
   },
   { timestamps: true }
 )

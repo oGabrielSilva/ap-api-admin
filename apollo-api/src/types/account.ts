@@ -9,6 +9,7 @@ export interface TUser extends TUserSignIn {
   name: string
   lastname: string
   avatar?: string
+  lastLogin: Date
 }
 
 export type TSession = {
