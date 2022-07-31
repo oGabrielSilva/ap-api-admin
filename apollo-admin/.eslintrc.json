@@ -23,6 +23,8 @@
     "comma-dangle": "off",
     "object-curly-newline": "off",
     "no-useless-constructor": "off",
-    "no-empty-function": "off"
+    "no-empty-function": "off",
+    "react/function-component-definition": "off",
+    "operator-linebreak": "off"
   }
 }

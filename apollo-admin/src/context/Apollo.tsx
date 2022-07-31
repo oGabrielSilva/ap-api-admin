@@ -2,11 +2,13 @@ import React, {
   createContext,
   ReactNode,
   useCallback,
+  useEffect,
   useMemo,
   useState,
 } from 'react'
 import Alert from '../components/Alert'
 import Constants from '../utils/Constants'
+import Device from '../utils/Device'
 
 type TAPCProps = { children: ReactNode }
 type TUserInfo = { name: string; email: string }
@@ -19,6 +21,7 @@ interface IApolloContext {
   sessionUid: string
   userInfo?: TUserInfo
   alertVisibled: boolean
+  isMobile: boolean
   setAlertVisibled: (value: boolean) => void //eslint-disable-line
   setAlertTitle: (value: string) => void //eslint-disable-line
   setAlertMessage: (value: string) => void //eslint-disable-line
@@ -37,6 +40,9 @@ function ApolloContextProvider({ children }: TAPCProps) {
   const [alertVisibled, setAlertVisibled] = useState<boolean>(false)
   const [alertTitle, setAlertTitle] = useState<string>('')
   const [alertMessage, setAlertMessage] = useState<string>('')
+
+  // System
+  const [isMobile, setIsMobile] = useState<boolean>(false)
 
   const handleAlert = useCallback((title: string, message: string) => {
     setAlertTitle(title)
@@ -59,11 +65,16 @@ function ApolloContextProvider({ children }: TAPCProps) {
     []
   )
 
+  const handleResizeScreen = useCallback(() => {
+    setIsMobile(Device.isMobile())
+  }, [])
+
   const context = useMemo(
     () => ({
       sessionUid,
       userInfo,
       alertVisibled,
+      isMobile,
       setAlertVisibled,
       setAlertTitle,
       setAlertMessage,
@@ -72,6 +83,7 @@ function ApolloContextProvider({ children }: TAPCProps) {
     }),
     [
       sessionUid,
+      isMobile,
       userInfo,
       alertVisibled,
       setAlertVisibled,
@@ -81,6 +93,14 @@ function ApolloContextProvider({ children }: TAPCProps) {
       setAlertMessage,
     ]
   )
+
+  useEffect(() => {
+    handleResizeScreen()
+    window.addEventListener('resize', handleResizeScreen)
+    return () => {
+      window.removeEventListener('resize', handleResizeScreen)
+    }
+  }, [])
 
   return (
     <ApolloContext.Provider value={context}>

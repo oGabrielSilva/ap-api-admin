@@ -1,7 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, {
+  CSSProperties,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 import { ApolloContext } from '../context/Apollo'
 import Colors from '../utils/Colors'
-import Device from '../utils/Device'
 import Margins from '../utils/Margins'
 
 interface IAlertProps {
@@ -9,8 +14,10 @@ interface IAlertProps {
   message: string
 }
 
+type TStyles = { [key: string]: CSSProperties }
+
 function Alert({ title, message }: IAlertProps) {
-  const { setAlertVisibled } = useContext(ApolloContext)
+  const { isMobile, setAlertVisibled } = useContext(ApolloContext)
   const [alertClose, setAlertClose] = useState(false)
   const [inCanvas, setInCanvas] = useState(false)
 
@@ -23,60 +30,64 @@ function Alert({ title, message }: IAlertProps) {
     setAlertClose(true)
   }
 
-  return (
-    <div
-      style={{
+  const styles: TStyles = useMemo(
+    () => ({
+      main: {
         position: 'fixed',
-        width: (Device.isMobile() && '80vw') || 550,
-        minHeight: 100,
+        width: (isMobile && '80vw') || 550,
         background: Colors.variantAlpha,
         borderRadius: Margins.radius.small,
-        padding: Margins.padding,
-        paddingTop: Margins.padding / 2,
+        padding: Margins.padding / 2,
+        paddingRight: Margins.margin,
         userSelect: 'none',
         transition: '1s ease',
         boxShadow: `1px 1px 5px -1px ${Colors.variantAlpha}`,
-        ...((Device.isMobile() && {
-          top: '50%',
-          left: (!inCanvas && '150%') || (!alertClose && '50%') || '100%',
-          transform:
-            (!alertClose && 'translate(-50%, -50%)') || 'translateY(-50%)',
+        ...((isMobile && {
+          top: Margins.margin,
+          right:
+            (!inCanvas && '-150%') ||
+            (!alertClose && Margins.margin) ||
+            '-150%',
         }) || {
           bottom: !inCanvas
             ? '-100px'
             : (!alertClose && Margins.margin) || '-100px',
           right: Margins.margin,
         }),
-      }}
-    >
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          width: '100%',
-          borderBottom: `1px solid ${Colors.text}`,
-          paddingBottom: Margins.padding / 2,
-        }}
-      >
-        <h2
-          style={{
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            ...((Device.isMobile() && { fontSize: 14 }) || { fontSize: 16 }),
-          }}
-        >
+      },
+      titleContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        width: '100%',
+        borderBottom: `1px solid ${Colors.text}`,
+        paddingBottom: Margins.padding / 2,
+      },
+      title: {
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        ...((isMobile && { fontSize: 14 }) || { fontSize: 16 }),
+      },
+      button: {
+        background: Colors.variantAlpha,
+        cursor: 'pointer',
+        marginLeft: Margins.margin,
+      },
+    }),
+    [inCanvas, alertClose]
+  )
+
+  return (
+    <div style={styles.main}>
+      <div style={styles.titleContainer}>
+        <h2 style={styles.title}>
           {title || 'Lorem ipsum dolor sit amet ipsum dolor sit amet'}
         </h2>
         <button
           type="button"
-          style={{
-            background: Colors.variantAlpha,
-            cursor: 'pointer',
-            marginLeft: Margins.margin,
-          }}
+          style={styles.button}
           onClick={() => handleCloseAlert()}
         >
           <h2

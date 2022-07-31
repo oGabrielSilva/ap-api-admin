@@ -10,7 +10,6 @@ import { Link } from 'react-router-dom'
 import Account from '../api/Account'
 import { ApolloContext } from '../context/Apollo'
 import Colors from '../utils/Colors'
-import Device from '../utils/Device'
 import Margins from '../utils/Margins'
 import Validation from '../utils/Validation'
 
@@ -56,7 +55,8 @@ const styles: IStyle = {
 }
 
 function SignIn() {
-  const { handleStorageSignIn, handleAlert } = useContext(ApolloContext)
+  const { isMobile, handleStorageSignIn, handleAlert } =
+    useContext(ApolloContext)
   const [remember, setRemember] = useState(false)
   const [email, setEmail] = useState<string>()
   const [password, setPassword] = useState<string>()
@@ -98,7 +98,7 @@ function SignIn() {
   return (
     <div
       style={{
-        width: (Device.isMobile() && '100%') || '70%',
+        width: (isMobile && '100%') || '70%',
         marginTop: Margins.margin,
       }}
     >
