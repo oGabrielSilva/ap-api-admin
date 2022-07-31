@@ -35,6 +35,7 @@ function Alert({ title, message }: IAlertProps) {
         paddingTop: Margins.padding / 2,
         userSelect: 'none',
         transition: '1s ease',
+        boxShadow: `1px 1px 5px -1px ${Colors.variantAlpha}`,
         ...((Device.isMobile() && {
           top: '50%',
           left: (!inCanvas && '150%') || (!alertClose && '50%') || '100%',
@@ -88,7 +89,11 @@ function Alert({ title, message }: IAlertProps) {
           </h2>
         </button>
       </div>
-      <div>{message}</div>
+      <div>
+        <p style={{ marginTop: Margins.margin / 2 }}>
+          {message || 'Lorem ipsum dolor sit amet ipsum dolor sit amet'}
+        </p>
+      </div>
     </div>
   )
 }

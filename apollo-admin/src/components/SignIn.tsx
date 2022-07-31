@@ -56,7 +56,7 @@ const styles: IStyle = {
 }
 
 function SignIn() {
-  const { handleStorageSignIn } = useContext(ApolloContext)
+  const { handleStorageSignIn, handleAlert } = useContext(ApolloContext)
   const [remember, setRemember] = useState(false)
   const [email, setEmail] = useState<string>()
   const [password, setPassword] = useState<string>()
@@ -78,11 +78,20 @@ function SignIn() {
     Account.signIn({ email, password })
       .then((response) => {
         if (response.data && response.data.session) {
-          handleStorageSignIn(response.data.session)
+          handleStorageSignIn(response.data, remember)
+          handleAlert(
+            'Success',
+            `Welcome to the Apollo Admin, ${response.data.user.name as string}`
+          )
         }
       })
       .catch((error) => {
-        console.log(error)
+        if (error.response && error.response.data) {
+          handleAlert(
+            'Oopss... some error happened',
+            error.response.data.message as string
+          )
+        }
       })
   }, [email, password])
 
