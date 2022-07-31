@@ -9,6 +9,8 @@ class Colors {
 
   public static variant = '#8d45e6'
 
+  public static variantAlpha = '#483263'
+
   public static text = '#999999'
 
   public static link = '#b783f7'
